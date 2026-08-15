@@ -62,6 +62,13 @@ type AlertPayload struct {
 	Host    string `json:"host"`
 }
 
+type TailscaleWebhookPayload struct {
+	Timestamp string `json:"timestamp"`
+	Type      string `json:"type"`
+	Message   string `json:"message"`
+	Data      string `json:"data,omitempty"`
+}
+
 func getColorForStatus(status string) int {
 	switch status {
 	case "critical", "down", "error":
@@ -282,6 +289,63 @@ func rawDiscordProxyHandler(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, resp.Body)
 }
 
+func tailscaleWebhookHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	webhookURL := os.Getenv("DISCORD_WEBHOOK_URL_TAILSCALE")
+	if webhookURL == "" {
+		webhookURL = os.Getenv("DISCORD_WEBHOOK_URL")
+	}
+	if webhookURL == "" {
+		http.Error(w, "Tailscale Discord Webhook URL not configured", http.StatusInternalServerError)
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	// Parse generic tailscale payload
+	var tsPayload TailscaleWebhookPayload
+	_ = json.Unmarshal(body, &tsPayload)
+
+	msgText := tsPayload.Message
+	if msgText == "" {
+		msgText = string(body) // Fallback to raw JSON string if message field is empty
+	}
+
+	eventType := tsPayload.Type
+	if eventType == "" {
+		eventType = "Tailscale Event"
+	}
+
+	// Format into a nice Discord embed
+	embed := DiscordEmbed{
+		Title:       fmt.Sprintf("Tailscale: %s", eventType),
+		Description: msgText,
+		Color:       3447003, // Blue
+		Timestamp:   time.Now(),
+	}
+
+	discordPayload := DiscordWebhookPayload{
+		Embeds: []DiscordEmbed{embed},
+	}
+
+	if err := sendToDiscord(webhookURL, discordPayload); err != nil {
+		http.Error(w, fmt.Sprintf("Failed to relay message: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status":"ok"}`))
+}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", healthHandler)
@@ -290,6 +354,7 @@ func main() {
 	mux.HandleFunc("/alert", alertHandler)
 	mux.HandleFunc("/raw", rawDiscordProxyHandler)
 	mux.HandleFunc("/raw/", rawDiscordProxyHandler)
+	mux.HandleFunc("/webhook/tailscale", tailscaleWebhookHandler)
 
 	log.Println("Starting server on :8089...")
 	if err := http.ListenAndServe(":8089", mux); err != nil {
