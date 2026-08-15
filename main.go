@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -63,7 +64,6 @@ type AlertPayload struct {
 func getColorForStatus(status string) int {
 	switch status {
 	case "critical", "down", "error":
-
 		return 15158332 // red
 	case "warning", "degraded":
 		return 15844367 // yellow
@@ -77,7 +77,6 @@ func getColorForStatus(status string) int {
 }
 
 func sendToDiscord(webhookURL string, payload DiscordWebhookPayload) error {
-
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {
 		return fmt.Errorf("could not marshal payload: %w", err)
@@ -93,17 +92,15 @@ func sendToDiscord(webhookURL string, payload DiscordWebhookPayload) error {
 	if err != nil {
 		return fmt.Errorf("could not send request: %w", err)
 	}
-
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || resp.StatusCode > 300 {
-		return fmt.Errorf("could not send request: %d (%s)", resp.StatusCode, resp.Status)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("discord returned status: %d (%s)", resp.StatusCode, resp.Status)
 	}
 	return nil
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -117,11 +114,9 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(res)
-
 }
 
 func pingHandler(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -141,19 +136,16 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
 	w.WriteHeader(http.StatusOK)
-
 	json.NewEncoder(w).Encode(res)
-
 }
 
 func NotifyHandler(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
 	var payload NotifyPayload
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -168,7 +160,6 @@ func NotifyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	formattedContent := fmt.Sprintf("[%s] %s", payload.Sender, payload.Message)
-
 	msg := DiscordWebhookPayload{
 		Content: formattedContent,
 	}
@@ -184,7 +175,6 @@ func NotifyHandler(w http.ResponseWriter, r *http.Request) {
 		"status":  "ok",
 		"message": "notification successfully relayed",
 	})
-
 }
 
 func alertHandler(w http.ResponseWriter, r *http.Request) {
@@ -192,6 +182,7 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
 	var payload AlertPayload
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -217,7 +208,7 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 				Inline: true,
 			},
 			{
-				Name:   "Service",
+				Name:   "Status",
 				Value:  payload.Status,
 				Inline: true,
 			},
@@ -232,26 +223,67 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Failed to relay message: %v", err), http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
 		"status":  "ok",
 		"message": "notification successfully relayed",
 	})
+}
 
+func rawDiscordProxyHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	webhookURL := os.Getenv("DISCORD_WEBHOOK_URL")
+	if webhookURL == "" {
+		http.Error(w, "DISCORD_WEBHOOK_URL not set", http.StatusBadRequest)
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	req, err := http.NewRequest(http.MethodPost, webhookURL, bytes.NewBuffer(body))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	contentType := r.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "application/json"
+	}
+	req.Header.Set("Content-Type", contentType)
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer resp.Body.Close()
+
+	w.WriteHeader(resp.StatusCode)
+	io.Copy(w, resp.Body)
 }
 
 func main() {
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", healthHandler)
 	mux.HandleFunc("/ping", pingHandler)
 	mux.HandleFunc("/notify", NotifyHandler)
 	mux.HandleFunc("/alert", alertHandler)
+	mux.HandleFunc("/raw", rawDiscordProxyHandler)
 
 	log.Println("Starting server on :8089...")
 	if err := http.ListenAndServe(":8089", mux); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
-
 }
