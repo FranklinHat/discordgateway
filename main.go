@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -237,13 +238,20 @@ func rawDiscordProxyHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
+	//default fallback
 	webhookURL := os.Getenv("DISCORD_WEBHOOK_URL")
-	if webhookURL == "" {
-		http.Error(w, "DISCORD_WEBHOOK_URL not set", http.StatusBadRequest)
-		return
-	}
 
+	targetChannel := strings.TrimPrefix(r.URL.Path, "/raw/")
+	targetChannel = strings.TrimPrefix(targetChannel, "/")
+
+	if targetChannel != "" && targetChannel != "raw" {
+		//converts end of string
+		envKey := fmt.Sprintf("DISCORD_WEBHOOK_URL_%s", strings.ToUpper(targetChannel))
+		if customURL := os.Getenv(envKey); customURL != "" {
+			webhookURL = customURL
+		}
+
+	}
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -281,6 +289,7 @@ func main() {
 	mux.HandleFunc("/notify", NotifyHandler)
 	mux.HandleFunc("/alert", alertHandler)
 	mux.HandleFunc("/raw", rawDiscordProxyHandler)
+	mux.HandleFunc("/raw/", rawDiscordProxyHandler)
 
 	log.Println("Starting server on :8089...")
 	if err := http.ListenAndServe(":8089", mux); err != nil {
