@@ -1,7 +1,7 @@
 
 # launch go binary
 
-FROM golang:1.22-alpine AS builder
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN go mod download
 #Copy source code, compile statistically
 
 COPY . .
-RUN CGO_ENABLED = 0 GOOS=linux go build -o gateway
+RUN CGO_ENABLED=0 GOOS=linux go build -o gateway .
 
 # Lightweight deployment container
 
