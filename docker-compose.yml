@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+    discord-gateway:
+      build: .
+      container_name: homelab-discord-gateway
+      restart: unless-stopped
+      ports:
+        - "8089:8089"
+      environment:
+        - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}

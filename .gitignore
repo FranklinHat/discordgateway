@@ -1,0 +1,9 @@
+# Environment files & secrets
+.env
+*.env
+webhook.env
+
+# Go build binaries
+gateway
+*.exe
+

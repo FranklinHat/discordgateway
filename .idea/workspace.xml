@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e835abea-d310-4d81-b5df-a00edd4e5d23" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="2" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.26.6" />
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="2.4961835575059212" />
+      <entry key="MS500" value="5.739091725366493" />
+      <entry key="S2" value="7.900270388115297" />
+      <entry key="S5" value="8.529009315171834" />
+      <entry key="S10" value="8.758913392557213" />
+      <entry key="S30" value="8.962633647165644" />
+      <entry key="S60" value="10.590039145035114" />
+      <entry key="M2" value="23.555063881381564" />
+      <entry key="M5" value="89.50695895085741" />
+      <entry key="M10" value="191.47855473803418" />
+      <entry key="M15" value="274.9769951255207" />
+      <entry key="M30" value="460.0939575414627" />
+      <entry key="H1" value="663.7066294897493" />
+      <entry key="H2" value="829.2619620811199" />
+      <entry key="H4" value="937.4053930239005" />
+      <entry key="D1" value="1044.4566989977686" />
+      <entry key="W1" value="1064.589951809757" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="2.173112386153967E-198" />
+      <entry key="S2" value="3.851641393250309E-50" />
+      <entry key="S5" value="1.884292073866058E-20" />
+      <entry key="S10" value="1.7228507745411745E-10" />
+      <entry key="S30" value="8.536844539266591E-4" />
+      <entry key="S60" value="0.041213474577874894" />
+      <entry key="M2" value="0.30446248545366134" />
+      <entry key="M5" value="1.5446946364595004" />
+      <entry key="M10" value="4.110143233525601" />
+      <entry key="M15" value="6.574446018506137" />
+      <entry key="M30" value="11.997488095452358" />
+      <entry key="H1" value="17.418688745650876" />
+      <entry key="H2" value="21.489798887302385" />
+      <entry key="H4" value="24.03020350166882" />
+      <entry key="D1" value="26.471622869142752" />
+      <entry key="W1" value="26.92364737456095" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="2.4275057333697827" />
+      <entry key="MS500" value="5.700686352457934" />
+      <entry key="S2" value="7.8868736697634185" />
+      <entry key="S5" value="8.523224904083174" />
+      <entry key="S10" value="8.75594405447077" />
+      <entry key="S30" value="8.962371096243746" />
+      <entry key="S60" value="10.628711224865546" />
+      <entry key="M2" value="23.84991100825485" />
+      <entry key="M5" value="91.02561341024759" />
+      <entry key="M10" value="195.554216347107" />
+      <entry key="M15" value="281.5155378469774" />
+      <entry key="M30" value="472.05870854786735" />
+      <entry key="H1" value="681.1008088776076" />
+      <entry key="H2" value="850.7362046722914" />
+      <entry key="H4" value="961.4267403972847" />
+      <entry key="D1" value="1070.926667916231" />
+      <entry key="W1" value="1091.5133581229932" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3HvP9VFiGuBAd3LtCXUu6JXhXoN" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.go build discordgateway.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.GoLinterPluginOnboardingV2": "true",
+    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
+    "RunOnceActivity.GoOptimizationToolWindowEnableInLayout.v333333": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.analysis.ui.options.defaults": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/fmhat",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/fmhat/GolandProjects/discordgateway/main.go",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="go build discordgateway" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+      <module name="discordgateway" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="discordgateway" />
+      <directory value="$PROJECT_DIR$" />
+      <auto_managed_config_id value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-63c95d513abe-9addb268e56c-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-262.9437.195" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-GO-262.9437.195" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e835abea-d310-4d81-b5df-a00edd4e5d23" name="Changes" comment="" />
+      <created>1786745417734</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1786745417734</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
